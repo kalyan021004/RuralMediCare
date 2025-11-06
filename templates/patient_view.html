@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ patient.patient_name }} - RuralMediCare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 50%, #f0fdfa 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            padding: 24px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #059669, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: Georgia, serif;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            padding: 32px 16px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 48px;
+            border-radius: 24px;
+            max-width: 672px;
+            width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .patient-name {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(135deg, #d1fae5, #dbeafe) padding-box,
+                        linear-gradient(135deg, #10b981, #3b82f6) border-box;
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .patient-info-item {
+            display: flex;
+            align-items: center;
+            color: #374151;
+        }
+
+        .tag {
+            font-weight: 600;
+            margin-right: 8px;
+            min-width: 80px;
+        }
+
+        .tag.age { color: #059669; }
+        .tag.location { color: #2563eb; }
+
+        .patient-value {
+            background: #f0fdf4;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: #065f46;
+        }
+
+        .patient-value.location {
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d1d5db, transparent);
+            margin: 24px 0;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-indicator {
+            width: 8px;
+            height: 24px;
+            border-radius: 9999px;
+            margin-right: 12px;
+        }
+
+        .health-indicator { background: linear-gradient(180deg, #10b981, #3b82f6); }
+        .risk-indicator { background: linear-gradient(180deg, #f97316, #ef4444); }
+
+        .health-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .health-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid;
+        }
+
+        .health-stat.heart-rate {
+            background: linear-gradient(135deg, #fef2f2, #fce7f3);
+            border-color: #fecaca;
+        }
+
+        .health-stat.spo2 {
+            background: linear-gradient(135deg, #eff6ff, #ecfeff);
+            border-color: #93c5fd;
+        }
+
+        .health-stat.temperature {
+            background: linear-gradient(135deg, #fff7ed, #fefce8);
+            border-color: #fed7aa;
+        }
+
+        .health-value {
+            font-weight: bold;
+        }
+
+        .health-value.heart-rate { color: #dc2626; }
+        .health-value.spo2 { color: #2563eb; }
+        .health-value.temperature { color: #ea580c; }
+
+        .health-category {
+            font-size: 0.875rem;
+            font-weight: normal;
+            color: #6b7280;
+        }
+
+        .risk-assessment {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+            border: 2px solid;
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-color: #fca5a5;
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-color: #86efac;
+        }
+
+        .confidence {
+            color: #6b7280;
+            margin-top: 8px;
+            font-size: 0.875rem;
+        }
+
+        .confidence-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .back-section {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #059669, #2563eb);
+            color: white;
+            font-weight: 600;
+            border-radius: 16px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #047857, #1d4ed8);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .back-arrow {
+            margin-right: 8px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 24px;
+                margin: 16px;
+            }
+
+            .patient-name {
+                font-size: 1.5rem;
+            }
+
+            .patient-info {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-badge {
+                font-size: 1.25rem;
+                padding: 12px 24px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .patient-info {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>RuralMediCare</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="card">
+            <!-- Patient Name -->
+            <h2 class="patient-name">{{ patient.patient_name }}</h2>
+
+            <!-- Patient Info -->
+            <div class="patient-info">
+                <div class="patient-info-item">
+                    <span class="tag age">Age:</span>
+                    <span class="patient-value">{{ patient.age }}</span>
+                </div>
+                <div class="patient-info-item">
+                    <span class="tag location">Location:</span>
+                    <span class="patient-value location">{{ patient.location }}</span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Health Stats -->
+            <h3 class="section-title">
+                <div class="section-indicator health-indicator"></div>
+                Live Health Stats
+            </h3>
+
+            <div class="health-stats">
+                <div class="health-stat heart-rate">
+                    <span>Heart Rate:</span>
+                    <span class="health-value heart-rate">
+                        {{ heart_rate }} <span class="health-category">({{ hr_cat }})</span>
+                    </span>
+                </div>
+                <div class="health-stat spo2">
+                    <span>SpO2:</span>
+                    <span class="health-value spo2">
+                        {{ spo2 }} <span class="health-category">({{ spo2_cat }})</span>
+                    </span>
+                </div>
+                <div class="health-stat temperature">
+                    <span>Temperature:</span>
+                    <span class="health-value temperature">
+                        {{ temperature }} <span class="health-category">({{ temp_cat }})</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Risk Assessment -->
+            <h3 class="section-title">
+                <div class="section-indicator risk-indicator"></div>
+                Risk Assessment
+            </h3>
+
+            <div class="risk-assessment">
+                <p class="risk-badge {% if risk == 'Serious Concern' %}risk-high{% else %}risk-low{% endif %}">
+                    {{ risk }}
+                </p>
+                <p class="confidence">
+                    Confidence: <span class="confidence-value">{{ confidence }}</span>
+                </p>
+            </div>
+
+            <!-- Back Button -->
+            <div class="back-section">
+                <a href="/" class="back-button">
+                    <span class="back-arrow">⬅</span>
+                    Back to Patients
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

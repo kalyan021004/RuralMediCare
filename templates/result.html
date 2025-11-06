@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eef2f3; padding: 30px; }
+        .container { max-width: 650px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; }
+        h2 { text-align: center; margin-bottom: 10px; }
+        .risk { font-size: 1.3em; font-weight: bold; text-align: center; margin-bottom: 15px; }
+        .high { color: #d9534f; }
+        .low { color: #5cb85c; }
+        .explain { white-space: pre-line; background: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #ddd; }
+        button {
+            width: 100%; padding: 12px; background: #007bff; color: #fff;
+            border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;
+        }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Risk Prediction Result</h2>
+
+    <p class="risk {% if risk == 'Serious Concern' %}high{% else %}low{% endif %}">
+        Result: {{ risk }}
+    </p>
+
+    <h3>Vital Sign Interpretation:</h3>
+    <ul>
+        <li>Heart Rate: <b>{{ hr_cat }}</b></li>
+        <li>Oxygen Saturation: <b>{{ spo2_cat }}</b></li>
+        <li>Body Temperature: <b>{{ temp_cat }}</b></li>
+    </ul>
+
+    <h3>Explanation:</h3>
+    <p class="explain">{{ lime_explanation }}</p>
+
+    <p><b>Model Confidence:</b> {{ confidence }}</p>
+
+    <a href="/"><button>Go Back</button></a>
+</div>
+
+</body>
+</html>
